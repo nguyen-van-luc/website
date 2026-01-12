@@ -1,0 +1,220 @@
+﻿@using System.Linq
+@model IEnumerable<Doanweb.Models.CartItem>
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height" data-bg-image="assets/images/breadcrumb/bg/1.jpg">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h2 class="breadcrumb-heading">Sản phẩm liên quan</h2>
+                        <ul>
+                            <li>
+                                <a href="index.html">Trang chủ <i class="pe-7s-angle-right"></i></a>
+                            </li>
+                            <li>Giỏ hàng</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="coupon-accordion">
+                        <h3>Khách hàng cũ? <span id="showlogin">Bấm vào đây để đăng nhập</span></h3>
+                        <div id="checkout-login" class="coupon-content" style="display:none;">
+                            <div class="coupon-info">
+                                <form action="javascript:void(0)">
+                                    <p class="form-row-first">
+                                        <label class="mb-1">Tên đăng nhập hoặc email <span class="required">*</span></label>
+                                        <input type="text">
+                                    </p>
+                                    <p class="form-row-last">
+                                        <label>Mật khẩu <span class="required">*</span></label>
+                                        <input type="password">
+                                    </p>
+                                    <p class="form-row">
+                                        <input type="checkbox" id="remember_me">
+                                        <label for="remember_me">Ghi nhớ đăng nhập</label>
+                                    </p>
+                                    <p class="lost-password"><a href="javascript:void(0)">Quên mật khẩu?</a></p>
+                                </form>
+                            </div>
+                        </div>
+
+                        <h3>Có mã giảm giá? <span id="showcoupon">Bấm vào đây để nhập mã</span></h3>
+                        <div id="checkout_coupon" class="coupon-checkout-content" style="display:none;">
+                            <div class="coupon-info">
+                                <form action="javascript:void(0)">
+                                    <p class="checkout-coupon">
+                                        <input placeholder="Nhập mã giảm giá" type="text">
+                                        <input class="coupon-inner_btn" value="Áp dụng" type="submit">
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-content table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="product_remove">Xóa</th>
+                                        <th class="product-thumbnail">Hình ảnh</th>
+                                        <th class="cart-product-name">Sản phẩm</th>
+                                        <th class="product-price">Đơn giá</th>
+                                        <th class="product-quantity">Số lượng</th>
+                                        <th class="product-subtotal">Thành tiền</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody id="cart-page-body">
+                                    @foreach (var item in Model)
+                                    {
+                                        var imagePath = string.IsNullOrWhiteSpace(item.Image)
+                                        ? Url.Content("~/assets/images/no-image.png")
+                                        : Url.Content($"~/assets/images/product/medium-size/{item.Image}");
+                                        <tr data-product-id="@item.ProductId">
+                                            <td class="product_remove">
+                                                <button type="button" class="btn btn-link text-danger btn-remove-cart" data-product-id="@item.ProductId">
+                                                    <i class="pe-7s-close" title="Remove"></i>
+                                                </button>
+                                            </td>
+                                            <td class="product-thumbnail">
+                                                <img src="@imagePath" alt="Cart Thumbnail" />
+                                            </td>
+                                            <td class="product-name">@item.ProductName</td>
+                                            <td class="product-price"><span class="amount">@item.Price.ToString("N0")đ</span></td>
+                                            <td class="quantity">
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box cart-quantity-input" value="@item.Quantity" type="number" min="1" data-product-id="@item.ProductId" />
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal"><span class="amount">@item.Total.ToString("N0")đ</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 me-auto">
+                                <div class="cart-page-total">
+                                    <h2>Tổng cộng giỏ hàng</h2>
+
+                                    <ul>
+                                        <li>
+                                            Tổng phụ
+                                            <span id="cart-page-subtotal">
+                                                @Model.Sum(i => i.Total).ToString("N0")đ
+                                            </span>
+                                        </li>
+                                        <li>
+                                            Tổng cộng
+                                            <span id="cart-page-total">
+                                                @Model.Sum(i => i.Total).ToString("N0")đ
+                                            </span>
+                                        </li>
+                                    </ul>
+
+                                    <!-- THANH TOÁN THƯỜNG -->
+                                    <a asp-controller="CheckOut"
+                                       asp-action="Index"
+                                       class="btn btn-primary rounded-0 w-100 mb-2">
+                                        Tiến hành thanh toán
+                                    </a>
+
+                                    <!-- THANH TOÁN VNPAY -->
+                                    <form method="post" action="/Payment/PayWithVnPay">
+                                        <button type="submit"
+                                                class="btn btn-danger rounded-0 w-100">
+                                            Thanh toán VNPay
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <h3>Giỏ hàng trống</h3>
+                            <p>Hãy tiếp tục mua sắm để thêm sản phẩm vào giỏ hàng.</p>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-primary rounded-0">Tiếp tục mua sắm</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts {
+    <script>
+        // =============================
+        // XÓA SẢN PHẨM
+        // =============================
+        document.querySelectorAll('.btn-remove-cart').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+
+                fetch('/Cart/Remove', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector(`tr[data-product-id="${productId}"]`).remove();
+                        updateCartSummary(data);
+                    }
+                });
+            });
+        });
+
+        // =============================
+        // CẬP NHẬT SỐ LƯỢNG
+        // =============================
+        document.querySelectorAll('.cart-quantity-input').forEach(input => {
+            input.addEventListener('change', function () {
+                const productId = this.dataset.productId;
+                const quantity = parseInt(this.value);
+
+                if (quantity <= 0) return;
+
+                fetch('/Cart/Update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId, quantity })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        updateCartSummary(data);
+                        location.reload(); // reload lại bảng cho đơn giản
+                    }
+                });
+            });
+        });
+
+        // =============================
+        // UPDATE TỔNG TIỀN
+        // =============================
+        function updateCartSummary(data) {
+            document.getElementById('cart-page-subtotal').innerText =
+                new Intl.NumberFormat('vi-VN').format(data.subtotal) + 'đ';
+
+            document.getElementById('cart-page-total').innerText =
+                new Intl.NumberFormat('vi-VN').format(data.subtotal) + 'đ';
+        }
+    </script>
+}

@@ -1,0 +1,169 @@
+﻿@model Doanweb.Models.TbProduct
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <!-- Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Chi tiết sản phẩm</h2>
+            <p class="text-muted">Thông tin chi tiết của sản phẩm trong hệ thống</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+
+                <div class="col-lg-10">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <!-- BASIC INFO -->
+                            <h5 class="fw-semibold mb-3">Thông tin cơ bản</h5>
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Tiêu đề</label>
+                                    <div class="form-control bg-light">@Model.Title</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Alias</label>
+                                    <div class="form-control bg-light">@Model.Alias</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Danh mục</label>
+                                    <div class="form-control bg-light">
+                                        @(Model.CategoryProduct != null ? Model.CategoryProduct.Title : "---")
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Giá</label>
+                                    <div class="form-control bg-light">@Model.Price</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Giá giảm</label>
+                                    <div class="form-control bg-light">
+                                        @(Model.PriceSale > 0 ? Model.PriceSale.ToString() : "---")
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Số lượng</label>
+                                    <div class="form-control bg-light">@Model.Quantity</div>
+                                </div>
+
+                            </div>
+
+                            <!-- STATUS -->
+                            <h5 class="fw-semibold mt-4 mb-3">Trạng thái</h5>
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Sản phẩm mới</label>
+                                    <div class="form-control bg-light">
+                                        @(Model.IsNew == true ? "Có" : "Không")
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Bán chạy</label>
+                                    <div class="form-control bg-light">
+                                        @(Model.IsBestSeller == true ? "Có" : "Không")
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Sao</label>
+                                    <div class="form-control bg-light">@Model.Star</div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Hiển thị</label><br />
+                                    @if (Model.IsActive == true)
+                                    {
+                                        <span class="badge bg-success">Hiển thị</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Ẩn</span>
+                                    }
+                                </div>
+
+                            </div>
+
+                            <!-- CONTENT -->
+                            <h5 class="fw-semibold mt-4 mb-3">Nội dung</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Mô tả</label>
+                                <div class="form-control bg-light">
+                                    @Html.Raw(Model.Description)
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Chi tiết</label>
+                                <div class="form-control bg-light">
+                                    @Html.Raw(Model.Detail)
+                                </div>
+                            </div>
+
+                            <!-- IMAGE -->
+                            <h5 class="fw-semibold mt-4 mb-3">Ảnh sản phẩm</h5>
+                            <div class="text-center">
+                                @if (!string.IsNullOrWhiteSpace(Model.Image))
+                                {
+                                    <img src="@Url.Content(Model.Image)"
+                                         style="max-width:240px;
+                                                    max-height:160px;
+                                                    object-fit:cover;
+                                                    border-radius:8px;
+                                                    border:1px solid #ddd;
+                                                    padding:4px;" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Không có ảnh</span>
+                                }
+                            </div>
+
+                            <!-- ACTION -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                    ← Quay lại
+                                </a>
+
+                                <a asp-action="Edit" asp-route-id="@Model.ProductId"
+                                   class="btn btn-primary px-4">
+                                    ✏️ Chỉnh sửa
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 12px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

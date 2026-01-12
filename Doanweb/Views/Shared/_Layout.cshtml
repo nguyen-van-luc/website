@@ -1,0 +1,464 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Doanweb.Models
+@using Doanweb.Extensions
+@using System.Linq
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var cartItems = HttpContextAccessor.HttpContext?.Session.GetObjectFromJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+    var cartCount = cartItems.Sum(i => i.Quantity);
+
+
+    // Tạo lời chào theo giờ
+    var hour = DateTime.Now.Hour;
+    string greeting;
+    if (hour >= 5 && hour < 12)
+    {
+        greeting = "Chào buổi sáng tốt lành!";
+    }
+    else if (hour >= 12 && hour < 18)
+    {
+        greeting = "Chúc bạn buổi chiều vui vẻ!";
+    }
+    else
+    {
+        greeting = "Chúc bạn buổi tối thư giãn!";
+    }
+}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>doanweb - chothuethietbidientu HTML Template</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon.ico" />
+
+    <!-- CSS
+    ============================================ -->
+    <!-- Vendor CSS (Contain Bootstrap, Icon Fonts) -->
+    <link rel="stylesheet" href="~/assets/css/vendor/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/assets/css/vendor/Pe-icon-7-stroke.css" />
+
+    <!-- Plugin CSS (Global Plugins Files) -->
+    <link rel="stylesheet" href="~/assets/css/plugins/animate.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/jquery-ui.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/nice-select.css">
+    <link rel="stylesheet" href="~/assets/css/plugins/magnific-popup.min.css" />
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link href="~/assets/toastr/toastr.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <!-- Begin Main Header Area -->
+        <header class="main-header_area position-relative">
+            <div class="header-top border-bottom d-none d-md-block">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-6">
+                            <div class="header-top-left">
+                                <ul class="dropdown-wrap text-matterhorn">
+                                    <li class="dropdown">
+                                        <button class="btn btn-link dropdown-toggle ht-btn" type="button" id="languageButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Vietnam
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="languageButton">
+                                            <li><a class="dropdown-item" href="#">Vietnam</a></li>
+                                            <li><a class="dropdown-item" href="#">English</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <button class="btn btn-link dropdown-toggle ht-btn" type="button" id="currencyButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            VNĐ
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="currencyButton">
+                                            <li><a class="dropdown-item" href="#">USA</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Số điện thoại:
+                                        <a href="tel://0464564848">0464564848</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="header-top-right text-matterhorn">
+                                <p class="shipping mb-0">Giao hàng miễn phí cho đơn hàng trên <span>300.000VNĐ</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-middle py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-12">
+                            <div class="header-middle-wrap">
+                                <a href="index.html" class="header-logo">
+                                    <img src="~/assets/images/logo/logo.png" alt="Header Logo">
+                                </a>
+                                <div class="header-search-area d-none d-lg-block">
+                                    <form action="#" class="header-searchbox">
+                                        <select class="nice-select select-search-category wide">
+                                            <option value="all">Tất cả danh mục</option>
+                                            <option value="product-item">Danh mục 01</option>
+                                            <option value="product-item-2">Danh mục 02</option>
+                                            <option value="product-item-3">Danh mục 03</option>
+                                            <option value="product-item-4">Danh mục 04</option>
+                                            <option value="product-item-5">Danh mục 05</option>
+                                        </select>
+                                        <input class="input-field" type="text" placeholder="Tìm kiếm">
+                                        <button class="btn btn-outline-whisper btn-primary-hover" type="submit"><i class="pe-7s-search"></i></button>
+                                    </form>
+                                </div>
+                                <div class="header-right">
+                                    <ul>
+                                        <li class="dropdown d-none d-md-block">
+                                            <button class="btn btn-link dropdown-toggle ht-btn p-0" type="button" id="settingButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="pe-7s-users"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButton">
+                                                <li><a class="dropdown-item" href="my-account.html">Tài khoản</a></li>
+                                                <li><a class="dropdown-item" href="login-register.html">Đăng nhập / Đăng kí</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="d-none d-md-block">
+                                            <a href="wishlist.html">
+                                                <i class="pe-7s-like"></i>
+                                            </a>
+                                        </li>
+                                        <li class="d-block d-lg-none">
+                                            <a href="#searchBar" class="search-btn toolbar-btn">
+                                                <i class="pe-7s-search"></i>
+                                            </a>
+                                        </li>
+                                        <li class="minicart-wrap me-3 me-lg-0">
+                                            <a href="#miniCart" class="minicart-btn toolbar-btn">
+                                                <i class="pe-7s-shopbag"></i>
+                                                <span class="quantity">@cartCount</span>
+                                            </a>
+                                        </li>
+                                        <li class="mobile-menu_wrap d-block d-lg-none">
+                                            <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn pl-0">
+                                                <i class="pe-7s-menu"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-header header-sticky" data-bg-color="#77b7f2">
+                <div class="container">
+                    <div class="main-header_nav position-relative">
+                        <div class="row align-items-center">
+                            <div class="col-lg-12 d-none d-lg-block">
+                                <div class="main-menu">
+                                    <nav class="main-nav">
+                                        <ul>
+                                            @await Component.InvokeAsync("MenuTop")
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-menu_wrapper" id="mobileMenu">
+                <div class="harmic-offcanvas-body">
+                    <div class="inner-body">
+                        <div class="harmic-offcanvas-top">
+                            <a href="#" class="button-close"><i class="pe-7s-close"></i></a>
+                        </div>
+                        <div class="offcanvas-user-info text-center px-6 pb-5">
+                            <div class=" text-silver">
+                                <p class="shipping mb-0">Giao hàng miễn phí cho đơn hàng trên <span class="text-primary">300.000VNĐ</span></p>
+                            </div>
+                            <ul class="dropdown-wrap justify-content-center text-silver">
+                                <li class="dropdown dropup">
+                                    <button class="btn btn-link dropdown-toggle ht-btn" type="button" id="languageButtonTwo" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Vietnam
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="languageButtonTwo">
+                                        <li><a class="dropdown-item" href="#">Vietnam</a></li>
+                                        <li><a class="dropdown-item" href="#">English</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown dropup">
+                                    <button class="btn btn-link dropdown-toggle ht-btn usd-dropdown" type="button" id="currencyButtonTwo" data-bs-toggle="dropdown" aria-expanded="false">
+                                        VNĐ
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="currencyButtonTwo">
+                                        <li><a class="dropdown-item" href="#">USA</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown dropup">
+                                    <button class="btn btn-link dropdown-toggle ht-btn p-0" type="button" id="settingButtonTwo" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="pe-7s-users"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingButtonTwo">
+                                        <li><a class="dropdown-item" href="my-account.html">Tài khoản</a></li>
+                                        <li><a class="dropdown-item" href="login-register.html">Đăng kí/Đăng nhập</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="wishlist.html">
+                                        <i class="pe-7s-like"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="offcanvas-menu_area">
+                            <nav class="offcanvas-navigation">
+                                <ul class="mobile-menu">
+                                    <li><a href="index.html"><span class="mm-text">Trang chủ</span></a></li>
+
+                                    <li><a href="about.html"><span class="mm-text">Giới thiệu</span></a></li>
+
+                                    <li class="menu-item-has-children">
+                                        <a href="#">
+                                            <span class="mm-text">Sản phẩm <i class="pe-7s-angle-down"></i></span>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li><a href="may-anh.html"><span class="mm-text">Máy ảnh</span></a></li>
+                                            <li><a href="laptop.html"><span class="mm-text">Laptop</span></a></li>
+                                            <li><a href="loa.html"><span class="mm-text">Loa</span></a></li>
+                                            <li><a href="dien-thoai.html"><span class="mm-text">Điện thoại</span></a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="menu-item-has-children">
+                                        <a href="#">
+                                            <span class="mm-text">Các trang <i class="pe-7s-angle-down"></i></span>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li><a href="faq.html"><span class="mm-text">Câu hỏi thường gặp</span></a></li>
+                                            <li><a href="404.html"><span class="mm-text">Trang lỗi 404</span></a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><a href="blog.html"><span class="mm-text">Tin tức</span></a></li>
+
+                                    <li><a href="contact.html"><span class="mm-text">Liên hệ</span></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="offcanvas-search_wrapper" id="searchBar">
+                <div class="harmic-offcanvas-body">
+                    <div class="container h-100">
+                        <div class="offcanvas-search">
+                            <div class="harmic-offcanvas-top">
+                                <a href="#" class="button-close"><i class="pe-7s-close"></i></a>
+                            </div>
+                            <span class="searchbox-info">Bắt đầu gõ và nhấn Enter để tìm kiếm</span>
+                            <form action="#" class="hm-searchbox">
+                                <input type="text" placeholder="Search">
+                                <button class="search-btn" type="submit"><i class="pe-7s-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("MiniCart")
+            <div class="global-overlay"></div>
+        </header>
+        <!-- Main Header Area End Here -->
+        @RenderBody()
+        <!-- Begin Footer Area -->
+        <div class="footer-area">
+            <div class="footer-top section-space-y-axis-100 text-black" data-bg-color="#e5ddcc">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="widget-item">
+                                <div class="footer-logo pb-4">
+                                    <a href="index.html">
+                                        <img src="~/assets/images/logo/logo.png" alt="Logo">
+                                    </a>
+                                </div>
+                                <p class="short-desc mb-2"><p>
+                                    Dịch vụ cho thuê thiết bị điện tử uy tín – máy ảnh, laptop, loa
+                                    , điện thoại… phục vụ mọi nhu cầu của bạn.
+                                </p>
+                                <div class="widget-contact-info pb-6">
+                                    <ul>
+                                        <li>
+                                            <i class="pe-7s-map-marker"></i>
+                                            184 Lê Duẩn, Trường Vinh, Thành phố Vinh
+                                        </li>
+                                        <li>
+                                            <i class="pe-7s-mail"></i>
+                                            <a href="mailto://info@example.com">1234@gmail.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="payment-method">
+                                    <a href="javascript:void(0)">
+                                        <img src="~/assets/images/payment/1.png" alt="Payment Method">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 offset-lg-1 col-md-6 pt-10 pt-lg-0">
+                            <div class="widget-item">
+                                <h3 class="widget-title mb-5">Thông tin</h3>
+                                <ul class="widget-list-item">
+                                    <li><a href="javascript:void(0)">Câu hỏi thường gặp</a></li>
+                                    <li><a href="javascript:void(0)">Chính sách vận chuyển</a></li>
+                                    <li><a href="javascript:void(0)">Chính sách đổi trả</a></li>
+                                    <li><a href="javascript:void(0)">Tình trạng đơn hàng</a></li>
+                                    <li><a href="javascript:void(0)">Thẻ quà tặng</a></li>
+                                    <li><a href="javascript:void(0)">Hỗ trợ truy cập</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 offset-lg-1 col-md-6 pt-10 pt-lg-0">
+                            <div class="widget-item">
+                                <h3 class="widget-title mb-5">Tài khoản của tôi</h3>
+                                <ul class="widget-list-item">
+                                    <li><a href="javascript:void(0)">Tài khoản của tôi</a></li>
+                                    <li><a href="javascript:void(0)">Thanh toán</a></li>
+                                    <li><a href="javascript:void(0)">Xác thực</a></li>
+                                    <li><a href="javascript:void(0)">Danh sách yêu thích</a></li>
+                                    <li><a href="javascript:void(0)">Điều khoản sử dụng</a></li>
+                                    <li><a href="javascript:void(0)">Câu hỏi thường gặp</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 pt-10 pt-lg-0">
+                            <div class="widget-item">
+                                <h3 class="widget-title mb-5">Bản tin</h3>
+                                <p class="short-desc">
+                                    Đăng ký để nhận thông tin mới nhất về các thiết bị cho thuê, khuyến mãi và ưu đãi đặc biệt.
+                                </p>
+                            </div>
+                            <div class="widget-form-area">
+                                <form class="widget-form" action="#">
+                                    <input class="input-field" type="email" autocomplete="off" placeholder="Nhập email của bạn">
+                                    <div class="button-wrap pt-5">
+                                        <button class="btn btn-custom-size btn-primary btn-secondary-hover rounded-0" id="mc-submit">Gửi</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Area End Here -->
+        <!-- Begin Scroll To Top -->
+        <a class="scroll-to-top" href="">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+        <!-- Scroll To Top End Here -->
+
+    </div>
+
+    <!-- Global Vendor, plugins JS -->
+    <!-- JS Files
+    ============================================ -->
+    <!-- Global Vendor, plugins JS -->
+    <!-- Vendor JS -->
+    <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/vendor/jquery-3.5.1.min.js"></script>
+    <script src="~/assets/js/vendor/modernizr-3.11.2.min.js"></script>
+    <script src="~/assets/js/vendor/jquery.waypoints.js"></script>
+
+    <!--Plugins JS-->
+    <script src="~/assets/js/plugins/wow.min.js"></script>
+    <script src="~/assets/js/plugins/jquery-ui.min.js"></script>
+    <script src="~/assets/js/plugins/swiper-bundle.min.js"></script>
+    <script src="~/assets/js/plugins/jquery.nice-select.js"></script>
+    <script src="~/assets/js/plugins/parallax.min.js"></script>
+    <script src="~/assets/js/plugins/jquery.magnific-popup.min.js"></script>
+
+    <!-- Main JS (Common Activation Codes) -->
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/toastr/toastr.min.js"></script>
+    <script src="~/js/cart.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Chatbot Greeting -->
+    <div id="chatbot-greeting"
+         style="position:fixed;bottom:95px;right:25px;width:180px;text-align:center;z-index:99998;">
+        <span style="background:rgba(255,255,255,0.95);color:#4c8bf5;
+                 padding:8px 16px;border-radius:16px;
+                 box-shadow:0 2px 8px rgba(0,0,0,0.08);
+                 font-size:16px;display:inline-block;">
+            @greeting
+        </span>
+    </div>
+
+    <!-- Chatbot Toggle Button -->
+    <div id="chatbot-button"
+         style="position:fixed;bottom:25px;right:25px;width:60px;height:60px;
+            background:#4c8bf5;color:#fff;border-radius:50%;display:flex;
+            align-items:center;justify-content:center;font-size:28px;
+            cursor:pointer;z-index:99999;
+            box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+        💬
+    </div>
+
+    <!-- Iframe Chatbot -->
+    <iframe id="chatbot-frame"
+            src="@Url.Content("~/chatbot/index.html")"
+            style="display:none;position:fixed;bottom:90px;right:25px;width:370px;height:550px;
+               border:none;border-radius:20px;z-index:99997;
+               box-shadow:0 5px 15px rgba(0,0,0,0.25);
+               transition:opacity 0.3s ease;opacity:0;">
+    </iframe>
+
+    <script>
+        const chatBtn = document.getElementById('chatbot-button');
+        const chatFrame = document.getElementById('chatbot-frame');
+        const chatGreeting = document.getElementById('chatbot-greeting');
+
+        let isOpen = false;
+
+        chatBtn.addEventListener('click', () => {
+            isOpen = !isOpen;
+
+            if (isOpen) {
+                chatFrame.style.display = 'block';
+                setTimeout(() => chatFrame.style.opacity = "1", 10);
+
+                chatBtn.textContent = '×';   // đổi icon thành nút tắt
+                chatGreeting.style.display = 'none';
+
+            } else {
+                chatFrame.style.opacity = "0";
+                setTimeout(() => chatFrame.style.display = 'none', 250);
+
+                chatBtn.textContent = '💬';  // đổi icon thành nút mở
+                chatGreeting.style.display = 'block';
+            }
+        });
+    </script>
+
+
+
+
+</body>
+
+</html>

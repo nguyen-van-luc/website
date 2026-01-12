@@ -1,0 +1,161 @@
+﻿@model Doanweb.Models.TbMenu
+
+@{
+    ViewData["Title"] = "Chi tiết menu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <!-- Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Chi tiết menu</h2>
+            <p class="text-muted">Thông tin chi tiết của menu trong hệ thống</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+
+                <div class="col-lg-10">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <!-- Basic info -->
+                            <h5 class="fw-semibold mb-3">Thông tin cơ bản</h5>
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Tiêu đề</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Title
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Alias</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Alias
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Mô tả</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Description
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Structure -->
+                            <h5 class="fw-semibold mt-4 mb-3">Cấu trúc menu</h5>
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Mức</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Levels
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Menu cha</label>
+                                    <div class="form-control bg-light">
+                                        @Model.ParentId
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Vị trí</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Position
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- System info -->
+                            <h5 class="fw-semibold mt-4 mb-3">Thông tin hệ thống</h5>
+                            <div class="row g-3">
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Ngày tạo</label>
+                                    <div class="form-control bg-light">
+                                        @Model.CreatedDate
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Người tạo</label>
+                                    <div class="form-control bg-light">
+                                        @Model.CreatedBy
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Ngày sửa</label>
+                                    <div class="form-control bg-light">
+                                        @Model.ModifiedDate
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Người sửa</label>
+                                    <div class="form-control bg-light">
+                                        @Model.ModifiedBy
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mt-4">
+                                <label class="form-label fw-semibold">Trạng thái</label><br />
+                                @if (Model.IsActive == true)
+                                {
+                                    <span class="badge bg-success">Hiển thị</span>
+                                }
+                                else if (Model.IsActive == false)
+                                {
+                                    <span class="badge bg-secondary">Ẩn</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">Chưa xác định</span>
+                                }
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                    ← Quay lại
+                                </a>
+
+                                <a asp-action="Edit" asp-route-id="@Model.MenuId"
+                                   class="btn btn-primary px-4">
+                                    ✏️ Chỉnh sửa
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 12px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

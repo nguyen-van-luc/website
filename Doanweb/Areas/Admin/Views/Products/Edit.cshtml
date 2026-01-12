@@ -1,0 +1,190 @@
+﻿@model Doanweb.Models.TbProduct
+
+@{
+    ViewData["Title"] = "Sửa sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <!-- Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Sửa sản phẩm</h2>
+            <p class="text-muted">Cập nhật thông tin sản phẩm</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+
+                <div class="col-lg-10">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <form asp-action="Edit" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="ProductId" />
+
+                                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                                <!-- ROW 1 -->
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="Title" class="form-label fw-semibold">Tiêu đề</label>
+                                        <input asp-for="Title" class="form-control" />
+                                        <span asp-validation-for="Title" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Alias" class="form-label fw-semibold">Alias</label>
+                                        <input asp-for="Alias" class="form-control" />
+                                        <span asp-validation-for="Alias" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- ROW 2 -->
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label asp-for="CategoryProductId" class="form-label fw-semibold">Danh mục</label>
+                                        <select asp-for="CategoryProductId"
+                                                asp-items="ViewBag.CategoryProductId"
+                                                class="form-select">
+                                            <option value="0">-- Chọn danh mục --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Image" class="form-label fw-semibold">Ảnh</label>
+                                        <div class="input-group">
+                                            <input asp-for="Image" id="Image" class="form-control" />
+                                            <button type="button"
+                                                    class="btn btn-success"
+                                                    onclick="openFileManager()">
+                                                Chọn ảnh
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PREVIEW IMAGE -->
+                                @if (!string.IsNullOrWhiteSpace(Model.Image))
+                                {
+                                    <div class="mt-2 text-center">
+                                        <img src="@Url.Content(Model.Image)"
+                                             style="max-width:200px;
+                                                        max-height:130px;
+                                                        object-fit:cover;
+                                                        border-radius:8px;
+                                                        border:1px solid #ddd;
+                                                        padding:4px;" />
+                                    </div>
+                                }
+
+                                <!-- ROW 3 -->
+                                <div class="row g-3 mt-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="Price" class="form-label fw-semibold">Giá</label>
+                                        <input asp-for="Price" type="number" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="PriceSale" class="form-label fw-semibold">Giá giảm</label>
+                                        <input asp-for="PriceSale" type="number" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <!-- ROW 4 -->
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label asp-for="Quantity" class="form-label fw-semibold">Số lượng</label>
+                                        <input asp-for="Quantity" type="number" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Star" class="form-label fw-semibold">Sao</label>
+                                        <input asp-for="Star" type="number" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <!-- DESCRIPTION -->
+                                <div class="mt-3">
+                                    <label asp-for="Description" class="form-label fw-semibold">Mô tả</label>
+                                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <!-- DETAIL -->
+                                <div class="mt-3">
+                                    <label asp-for="Detail" class="form-label fw-semibold">Chi tiết</label>
+                                    <textarea asp-for="Detail" class="form-control"></textarea>
+                                </div>
+
+                                <!-- CHECKBOX -->
+                                <div class="row mt-3">
+                                    <div class="col-md-4 form-check">
+                                        <input asp-for="IsNew" class="form-check-input" />
+                                        <label asp-for="IsNew" class="form-check-label">Sản phẩm mới</label>
+                                    </div>
+
+                                    <div class="col-md-4 form-check">
+                                        <input asp-for="IsBestSeller" class="form-check-input" />
+                                        <label asp-for="IsBestSeller" class="form-check-label">Bán chạy</label>
+                                    </div>
+
+                                    <div class="col-md-4 form-check">
+                                        <input asp-for="IsActive" class="form-check-input" />
+                                        <label asp-for="IsActive" class="form-check-label">Hiển thị</label>
+                                    </div>
+                                </div>
+
+                                <!-- ACTION -->
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                        ← Quay lại
+                                    </a>
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        💾 Cập nhật
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+@{
+    var summerNote = new Doanweb.Areas.Admin.Models.SummerNote("#Detail");
+    <partial name="_SummerNote" model="summerNote" />
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    function openFileManager() {
+        window.open('/Admin/file-manager?field_id=Image',
+                    'FileManager',
+                    'width=900,height=600');
+    }
+</script>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 12px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

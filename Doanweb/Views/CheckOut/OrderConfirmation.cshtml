@@ -1,0 +1,43 @@
+@{
+    ViewBag.Title = "Xác nhận đơn hàng";
+    string qrUrl = ViewBag.QRUrl as string;
+    var orderId = ViewBag.OrderId;
+}
+
+<main class="main-content">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+
+                <h2 class="mb-3">Đặt hàng thành công!</h2>
+
+                <p class="mb-3">
+                    Mã đơn hàng của bạn:
+                    <strong style="color:#28a745; font-size:20px;">@orderId</strong>
+                </p>
+
+                @if (!string.IsNullOrEmpty(qrUrl))
+                {
+                   
+                    <p>Vui lòng quét mã QR bên dưới để thanh toán VNPay:</p>
+
+                    <div class="mb-4">
+                        <img src="@qrUrl" alt="QR VNPay" style="max-width:300px;" />
+                    </div>
+
+                    <p class="text-muted">Sau khi thanh toán, hệ thống sẽ tự động xác nhận đơn hàng của bạn.</p>
+                }
+                else
+                {
+                    
+                    <p>Cảm ơn bạn đã đặt hàng. Nhân viên sẽ liên hệ để xác nhận và giao hàng.</p>
+                }
+
+                <a asp-controller="Home" asp-action="Index" class="btn btn-success mt-3">
+                    Quay về trang chủ
+                </a>
+
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+
+<div class="breadcrumb-area breadcrumb-height" data-bg-image="assets/images/breadcrumb/bg/1-1-1920x373.jpg">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-lg-12">
+                <div class="breadcrumb-item">
+                    <h2 class="breadcrumb-heading">Contact Us</h2>
+                    <ul>
+                        <li>
+                            <a href="/">Home <i class="pe-7s-angle-right"></i></a>
+                        </li>
+                        <li>Contact</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contact-with-map">
+
+    <div class="contact-map">
+        <iframe class="contact-map-size"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431"
+                allowfullscreen
+                loading="lazy">
+        </iframe>
+    </div>
+
+    <div class="contact-form-area section-space-bottom-100">
+        <div class="container">
+            <div class="contact-form-wrap">
+
+                <!-- CONTACT FORM (KHÔNG DÙNG <form>) -->
+                <div class="contact-form">
+                    <h4 class="contact-form-title pb-2 mb-7">Send Us a Message</h4>
+
+                    <div class="form-field">
+                        <input type="text" id="c_name" placeholder="Name*" class="input-field">
+                    </div>
+
+                    <div class="form-field mt-6">
+                        <input type="text" id="c_phone" placeholder="Phone*" class="input-field">
+                    </div>
+
+                    <div class="form-field mt-6">
+                        <input type="email" id="c_email" placeholder="Email*" class="input-field">
+                    </div>
+
+                    <div class="form-field mt-6">
+                        <textarea id="c_message" placeholder="Message" class="textarea-field"></textarea>
+                    </div>
+
+                    <div class="button-wrap mt-8">
+                        <button type="button"
+                                id="c_submit"
+                                class="btn btn-custom-size lg-size btn-primary btn-secondary-hover rounded-0">
+                            Post Message
+                        </button>
+                    </div>
+                </div>
+                <!-- END CONTACT FORM -->
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(function () {
+
+            $("#c_submit").on("click", function (e) {
+
+                // 🔥 CHẶN MỌI HÀNH VI KHÁC
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                // GỬI REQUEST (DB VẪN LƯU)
+                $.ajax({
+                    url: "/lien-he",
+                    type: "POST",
+                    data: {
+                        name: $("#c_name").val(),
+                        phone: $("#c_phone").val(),
+                        email: $("#c_email").val(),
+                        message: $("#c_message").val()
+                    }
+                });
+
+                // 🔥 ÉP HIỂN THỊ THÀNH CÔNG – KHÔNG PHỤ THUỘC RESPONSE
+                $("#c_name").val("");
+                $("#c_phone").val("");
+                $("#c_email").val("");
+                $("#c_message").val("");
+
+                toastr.clear(); // xoá toast cũ
+                toastr.success("Gửi thành công");
+
+                return false;
+            });
+
+        });
+    </script>
+}
+}

@@ -1,0 +1,124 @@
+﻿@model Doanweb.Models.TbAccount
+@using Doanweb.Utilities
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Harmic | Registration Page</title>
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/admin/dist/css/adminlte.min.css">
+
+    <style type="text/css">
+        .form-control {
+            border-right: 1px solid blue;
+        }
+
+        .error {
+            color: red;
+            display: block;
+        }
+    </style>
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="#"><b>Harmic</b> Register</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Register a new membership</p>
+
+                <form id="validate" asp-page="/Admin/Register/Index" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" asp-for="FullName" class="form-control" placeholder="Full name" required>
+                        <div class="invalid-feedback">Please enter full name</div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" id="Username" asp-for="Username" class="form-control" placeholder="Username" required>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="password" id="Password" asp-for="Password" class="form-control" placeholder="Password" required>
+                        <div class="invalid-feedback">Please enter password</div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" placeholder="Retype password" required>
+                        <div class="invalid-feedback">Retype password does not match</div>
+                    </div>
+
+                    <div id="CheckPasswordMatch"></div>
+                    <div style="color:red">@Function._Message</div>
+
+                    <div class="row mt-2">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                                <label for="agreeTerms">I agree to the <a href="#">terms</a></label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="social-auth-links text-center">
+                    <p>- OR -</p>
+                    <a href="#" class="btn btn-block btn-primary">
+                        <i class="fab fa-facebook mr-2"></i> Sign up using Facebook
+                    </a>
+                    <a href="#" class="btn btn-block btn-danger">
+                        <i class="fab fa-google-plus mr-2"></i> Sign up using Google+
+                    </a>
+                </div>
+
+                <a asp-controller="Login" asp-action="Index" class="text-center">I already have a membership</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="~/admin/plugins/jquery/jquery.min.js"></script>
+    <script src="~/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/admin/dist/js/adminlte.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/additional-methods.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#validate").validate({
+                rules: {
+                    Username: "required",
+                    Password: "required",
+                    ConfirmPassword: {
+                        required: true,
+                        equalTo: "#Password"
+                    }
+                },
+                messages: {
+                    Username: "Username is required",
+                    Password: "Password is required",
+                    ConfirmPassword: {
+                        required: "Confirm Password is required",
+                        equalTo: "Passwords do not match"
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

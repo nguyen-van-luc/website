@@ -1,0 +1,291 @@
+﻿@model TbProduct
+@{
+    var productReviews = ViewBag.productReview as List<TbProductReview> ?? new();
+}
+
+<main class="main-content">
+
+    <!-- ===== SẢN PHẨM ===== -->
+    <div class="single-product-area section-space-top-100">
+        <div class="container">
+            <div class="row">
+
+                <!-- ẢNH -->
+                <div class="col-lg-5">
+                    <div class="product-image-wrap">
+                        <img class="img-fluid rounded"
+                             src="@Model.Image"
+                             alt="@Model.Title" />
+                    </div>
+                </div>
+
+                <!-- THÔNG TIN -->
+                <div class="col-lg-7">
+                    <h2 class="mb-2">@Model.Title</h2>
+
+                    <!-- GIÁ -->
+                    <div class="price-box mb-3">
+                        @if (Model.PriceSale > 0)
+                        {
+                            <span class="new-price text-danger h4 me-2">
+                                @Model.PriceSale?.ToString("N0")₫
+                            </span>
+                            <del class="text-muted">
+                                @Model.Price?.ToString("N0")₫
+                            </del>
+                        }
+                        else
+                        {
+                            <span class="new-price text-danger h4">
+                                @Model.Price?.ToString("N0")₫
+                            </span>
+                        }
+                    </div>
+
+                    <!-- ĐÁNH GIÁ -->
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rating-box me-2">
+                            <ul class="d-flex mb-0">
+                                @for (int i = 0; i < Model.Star; i++)
+                                {
+                                    <li><i class="pe-7s-star text-warning"></i></li>
+                                }
+                            </ul>
+                        </div>
+                        <span class="text-muted">
+                            (@productReviews.Count đánh giá)
+                        </span>
+                    </div>
+
+                    <!-- MÔ TẢ NGẮN -->
+                    <p class="text-muted mb-3">
+                        @Model.Description
+                    </p>
+
+                    <!-- THÔNG TIN NỔI BẬT -->
+                    <div class="product-summary mb-4">
+                        <h5>Thông tin nổi bật</h5>
+                        <ul>
+                            <li>✔ Máy chiếu Full HD</li>
+                            <li>✔ Hỗ trợ trình chiếu không dây</li>
+                            <li>✔ Phù hợp gia đình & văn phòng</li>
+                            <li>✔ Bảo hành chính hãng</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 mt-4">
+                        <input type="number"
+                               id="qty"
+                               value="1"
+                               min="1"
+                               class="form-control"
+                               style="width:90px" />
+
+                        <button type="button"
+                                class="btn btn-danger btn-lg"
+                                onclick="addToCart(@Model.ProductId)">
+                            THÊM VÀO GIỎ HÀNG
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB ===== -->
+    <div class="product-tab-area section-space-top-80" id="review">
+        <div class="container">
+
+            <!-- TAB -->
+            <ul class="nav product-tab-nav mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active"
+                       data-bs-toggle="tab"
+                       href="#desc">
+                        Mô tả
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       data-bs-toggle="tab"
+                       href="#review-tab">
+                        Đánh giá (@productReviews.Count)
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+
+                <!-- MÔ TẢ -->
+                <div class="tab-pane fade show active" id="desc">
+                    @Html.Raw(Model.Detail)
+                </div>
+
+                <!-- ĐÁNH GIÁ -->
+                <div class="tab-pane fade" id="review-tab">
+
+                    <h4 class="mb-4">
+                        @productReviews.Count đánh giá
+                    </h4>
+
+                    @foreach (var r in productReviews)
+                    {
+                        <div class="border-bottom pb-3 mb-3">
+                            <strong>@r.Name</strong>
+                            <span class="text-muted">
+                                (@r.CreatedDate?.ToString("dd/MM/yyyy"))
+                            </span>
+
+                            <div class="rating-box mb-1">
+                                @for (int i = 0; i < r.Star; i++)
+                                {
+                                    <i class="pe-7s-star text-warning"></i>
+                                }
+                            </div>
+
+                            <p class="mb-0">@r.Detail</p>
+                        </div>
+                    }
+
+                    <!-- FORM ĐÁNH GIÁ -->
+                    <div class="feedback-area pt-5">
+                        <h4>Thêm một đánh giá</h4>
+                        <p class="text-muted">
+                            Email của bạn sẽ không được hiển thị.
+                        </p>
+
+                        <!-- CHỌN SAO -->
+                        <div class="rating-box mb-3">
+                            <ul class="rating-select d-flex gap-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <li data-star="@i" style="cursor:pointer">
+                                        <i class="pe-7s-star"></i>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <form asp-action="AddReview"
+                              asp-controller="Product"
+                              method="post">
+
+                            <!-- ⚠️ QUAN TRỌNG -->
+                            <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                            <input type="hidden" name="Alias" value="@Model.Alias" />
+                            <input type="hidden" name="Star" id="Star" value="5" />
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input class="form-control"
+                                           name="Name"
+                                           placeholder="Tên*"
+                                           required />
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control"
+                                           name="Email"
+                                           placeholder="Email*"
+                                           required />
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control"
+                                           name="Phone"
+                                           placeholder="SĐT" />
+                                </div>
+                            </div>
+
+                            <textarea class="form-control mt-3"
+                                      name="Detail"
+                                      rows="4"
+                                      placeholder="Nội dung đánh giá"
+                                      required></textarea>
+
+                            <button class="btn btn-dark mt-3">
+                                GỬI ĐÁNH GIÁ
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ===== SCRIPT CHỌN SAO ===== -->
+<script>
+    document.querySelectorAll('.rating-select li').forEach((item, index) => {
+        item.addEventListener('click', function () {
+            document.getElementById('Star').value = index + 1;
+
+            document.querySelectorAll('.rating-select i')
+                .forEach(i => i.classList.remove('text-warning'));
+
+            for (let i = 0; i <= index; i++) {
+                document.querySelectorAll('.rating-select i')[i]
+                    .classList.add('text-warning');
+            }
+        });
+    });
+</script>
+
+<style>
+    .product-summary {
+        background: #f8f9fa;
+        border: 1px solid #eee;
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+        .product-summary ul {
+            padding-left: 18px;
+            margin-bottom: 0;
+        }
+
+        .product-summary li {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+    .rating-select li {
+        cursor: pointer;
+        margin-right: 6px;
+    }
+</style>
+<script>
+    function addToCart(productId) {
+        const qty = parseInt(document.getElementById('qty').value) || 1;
+
+        fetch('/Cart/Add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ProductId: productId,
+                Quantity: qty
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ Đã thêm vào giỏ hàng');
+
+                // nếu bạn có icon giỏ hàng
+                if (document.getElementById('cart-count')) {
+                    document.getElementById('cart-count').innerText = data.cartCount;
+                }
+            } else {
+                alert('❌ Không thể thêm sản phẩm');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('❌ Lỗi hệ thống');
+        });
+    }
+</script>

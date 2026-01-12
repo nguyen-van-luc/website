@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>File Manager</title>
+
+    <link rel="stylesheet" href="~/admin/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/admin/lib/jqueryui/themes/jquery-ui.css" />
+    <link rel="stylesheet" href="~/admin/lib/elfinder/css/elfinder.full.css" />
+    <link rel="stylesheet" href="~/admin/elfinder-material-theme/Material/css/theme-light.min.css" />
+
+    <script src="~/admin/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/admin/lib/jqueryui/jquery-ui.min.js"></script>
+    <script src="~/admin/lib/elfinder/js/elfinder.min.js"></script>
+</head>
+
+<body>
+    <div id="elfinder"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var myCommands = elFinder.prototype._options.commands;
+            var disabled = ['callback', 'chmod', 'editor', 'netmount', 'ping', 'search', 'zipdl', 'help'];
+
+            $.each(disabled, function (i, cmd) {
+                (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
+            });
+                    var options = {
+            baseUrl: "/admin/lib/elfinder/",
+            url: "/Admin/el-finder-file-system/connector",
+            rememberLastDir: false,
+            lang: 'vi',
+
+            getFileCallback: function (file) {
+                var fieldId = new URLSearchParams(window.location.search).get('field_id');
+
+                if (fieldId && window.opener) {
+                    window.opener.document.getElementById(fieldId).value = file.url;
+                    window.close();
+                }
+            }
+        };
+
+
+
+
+            $('#elfinder').elfinder(options);
+        });
+    </script>
+</body>
+</html>

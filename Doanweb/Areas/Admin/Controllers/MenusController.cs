@@ -1,0 +1,150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Doanweb.Models;
+using Microsoft.AspNetCore.Authorization;
+
+namespace Doanweb.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    //[Authorize(Roles = "Admin")]
+    public class MenusController : Controller
+    {
+        private readonly ChothueContext _context;
+
+        public MenusController(ChothueContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Admin/Menus
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.TbMenus.ToListAsync());
+        }
+
+        // GET: Admin/Menus/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tbMenu = await _context.TbMenus
+                .FirstOrDefaultAsync(m => m.MenuId == id);
+
+            if (tbMenu == null) return NotFound();
+
+            return View(tbMenu);
+        }
+
+        // GET: Admin/Menus/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Admin/Menus/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+            [Bind("MenuId,Title,Alias,Description,Levels,ParentId,Position,IsActive")]
+            TbMenu tbMenu)
+        {
+            if (ModelState.IsValid)
+            {
+                tbMenu.Alias = Doanweb.Utilities.Function
+                    .TitleSlugGenerrationAlias(tbMenu.Title);
+
+                // FIX bool?
+                tbMenu.IsActive = tbMenu.IsActive ?? false;
+
+                tbMenu.CreatedDate = DateTime.Now;
+
+                _context.Add(tbMenu);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tbMenu);
+        }
+
+        // GET: Admin/Menus/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tbMenu = await _context.TbMenus.FindAsync(id);
+            if (tbMenu == null) return NotFound();
+
+            return View(tbMenu);
+        }
+
+        // POST: Admin/Menus/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("MenuId,Title,Alias,Description,Levels,ParentId,Position,IsActive")]
+            TbMenu tbMenu)
+        {
+            if (id != tbMenu.MenuId) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // FIX bool?
+                    tbMenu.IsActive = tbMenu.IsActive ?? false;
+
+                    tbMenu.ModifiedDate = DateTime.Now;
+
+                    _context.Update(tbMenu);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TbMenuExists(tbMenu.MenuId))
+                        return NotFound();
+                    else
+                        throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tbMenu);
+        }
+
+        // GET: Admin/Menus/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var tbMenu = await _context.TbMenus
+                .FirstOrDefaultAsync(m => m.MenuId == id);
+
+            if (tbMenu == null) return NotFound();
+
+            return View(tbMenu);
+        }
+
+        // POST: Admin/Menus/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var tbMenu = await _context.TbMenus.FindAsync(id);
+            if (tbMenu != null)
+            {
+                _context.TbMenus.Remove(tbMenu);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool TbMenuExists(int id)
+        {
+            return _context.TbMenus.Any(e => e.MenuId == id);
+        }
+    }
+}

@@ -1,0 +1,54 @@
+﻿@using System.Linq
+@model IEnumerable<Doanweb.Models.CartItem>
+@{
+    var items = Model?.ToList() ?? new List<Doanweb.Models.CartItem>();
+    var subtotal = items.Sum(c => c.Total);
+}
+
+<div class="offcanvas-minicart_wrapper" id="miniCart">
+    <div class="harmic-offcanvas-body">
+        <div class="minicart-content">
+            <div class="minicart-heading">
+                <h4 class="mb-0">Giỏ hàng</h4>
+                <a href="#" class="button-close"><i class="pe-7s-close"></i></a>
+            </div>
+            <ul class="minicart-list">
+                @if (items.Any())
+                {
+                    foreach (var item in items)
+                    {
+                        var imagePath = string.IsNullOrWhiteSpace(item.Image)
+                        ? Url.Content("~/assets/images/no-image.png")
+                        : Url.Content(item.Image);  // <-- DÙNG NGUYÊN ĐƯỜNG DẪN DB
+
+
+                        <li class="minicart-product">
+                            <a class="product-item_remove btn-remove-cart" href="#" data-product-id="@item.ProductId">
+                                <i class="pe-7s-close"></i>
+                            </a>
+                            <a href="javascript:void(0)" class="product-item_img">
+                                <img class="img-full" src="@imagePath" alt="@item.ProductName">
+                            </a>
+                            <div class="product-item_content">
+                                <a class="product-item_title" href="javascript:void(0)">@item.ProductName</a>
+                                <span class="product-item_quantity">@item.Quantity x @item.Price.ToString("N0")đ</span>
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="minicart-product">Giỏ hàng của bạn đang trống.</li>
+                }
+            </ul>
+        </div>
+        <div class="minicart-item_total">
+            <span>Tổng</span>
+            <span class="ammount" id="mini-cart-subtotal">@subtotal.ToString("N0")đ</span>
+        </div>
+        <div class="group-btn_wrap d-grid gap-2">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-secondary btn-primary-hover">Xem giỏ hàng</a>
+            <a asp-controller="Checkout" asp-action="Index" class="btn btn-secondary btn-primary-hover">Thanh toán</a>
+        </div>
+    </div>
+</div>

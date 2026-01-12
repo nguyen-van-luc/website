@@ -1,0 +1,110 @@
+﻿@model Doanweb.Models.TbMenu
+
+@{
+    ViewData["Title"] = "Sửa menu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Sửa menu</h2>
+            <p class="text-muted">Cập nhật menu</p>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+
+                <div class="col-lg-10">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <form asp-action="Edit" method="post">
+                                <input type="hidden" asp-for="MenuId" />
+
+                                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="Title" class="form-label fw-semibold">Tiêu đề</label>
+                                        <input asp-for="Title" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Alias" class="form-label fw-semibold">Alias</label>
+                                        <input asp-for="Alias" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label asp-for="Levels" class="form-label fw-semibold">Mức</label>
+                                        <input asp-for="Levels" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Position" class="form-label fw-semibold">Vị trí</label>
+                                        <input asp-for="Position" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label asp-for="ParentId" class="form-label fw-semibold">Menu cha</label>
+                                        <input asp-for="ParentId" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Description" class="form-label fw-semibold">Mô tả</label>
+                                        <input asp-for="Description" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <!-- ✅ TRẠNG THÁI -->
+                                <div class="form-group mt-3">
+                                    <label class="form-label fw-semibold">Trạng thái</label>
+                                    <select name="IsActive" class="form-select">
+                                        @if (Model.IsActive == true)
+                                        {
+                                            <option value="true" selected>Hiển thị</option>
+                                            <option value="false">Ẩn</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="true">Hiển thị</option>
+                                            <option value="false" selected>Ẩn</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                        ← Quay lại
+                                    </a>
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        💾 Cập nhật
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 12px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>

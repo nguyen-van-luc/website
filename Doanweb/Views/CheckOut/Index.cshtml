@@ -1,0 +1,106 @@
+﻿@model List<Doanweb.Models.CartItem>
+
+<div class="container" style="margin-top:40px; margin-bottom:60px;">
+    <form asp-action="Index" method="post" id="checkoutForm">
+        <div class="row">
+
+            <div class="col-md-6">
+                <h3 class="mb-4">CHI TIẾT THANH TOÁN</h3>
+
+                <input type="hidden" name="customerId" value="1" />
+
+                <div class="mb-3">
+                    <label>Tên khách hàng *</label>
+                    <input type="text" name="customerName" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label>Địa chỉ *</label>
+                    <input type="text" name="address" class="form-control" required />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Email *</label>
+                        <input type="email" name="email" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>SDT *</label>
+                        <input type="text" name="phone" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Ngày dự kiến trả *</label>
+                    <input type="date" name="expectedReturnDate" class="form-control" required />
+                </div>
+
+                <div class="mb-4">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" name="note" rows="4"></textarea>
+                </div>
+
+
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <input type="hidden" name="cartItems[@i].ProductId" value="@Model[i].ProductId" />
+                    <input type="hidden" name="cartItems[@i].Quantity" value="@Model[i].Quantity" />
+                    <input type="hidden" name="cartItems[@i].Price" value="@Model[i].Price" />
+                }
+            </div>
+
+            <div class="col-md-6">
+                <div style="background:#f4f4f4; padding:30px;">
+                    <h4 class="mb-4 text-center">ĐƠN HÀNG CỦA BẠN</h4>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SẢN PHẨM</th>
+                                <th class="text-end">TỔNG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ProductName × @item.Quantity</td>
+                                    <td class="text-end">@item.Total.ToString("N0") ₫</td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td><strong>Tổng phụ giỏ hàng</strong></td>
+                                <td class="text-end"><strong>@Model.Sum(x => x.Total).ToString("N0") ₫</strong></td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Tổng đơn hàng</strong></td>
+                                <td class="text-end">
+                                    <strong style="font-size:20px;">
+                                        @Model.Sum(x => x.Total).ToString("N0") ₫
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="mb-3">
+                        <label class="d-block">
+                            <input type="radio" name="paymentMethod" value="COD" checked /> Thanh toán COD
+                        </label>
+                        <label class="d-block">
+                            <input type="radio" name="paymentMethod" value="VNPAY" /> Thanh toán qua VNPAY
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100" style="padding:12px 0; font-size:18px;">
+                        Đặt hàng
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>

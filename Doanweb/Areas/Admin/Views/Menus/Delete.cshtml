@@ -1,0 +1,94 @@
+﻿@model Doanweb.Models.TbMenu
+
+@{
+    ViewData["Title"] = "Xóa menu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <h1 class="fw-bold text-danger">Xóa menu</h1>
+            <p class="text-muted">Hành động này không thể hoàn tác</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <!-- Warning -->
+                            <div class="alert alert-danger d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Bạn có chắc chắn muốn xóa menu này không?
+                            </div>
+
+                            <!-- Info -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Tiêu đề</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Title
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Alias</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Alias
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Mức</label>
+                                    <div class="form-control bg-light">
+                                        @Model.Levels
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Trạng thái</label>
+                                    <div class="form-control bg-light">
+                                        @(Model.IsActive == true ? "Hiển thị" : "Ẩn")
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <form asp-action="Delete" class="mt-4 d-flex justify-content-between">
+                                <input type="hidden" asp-for="MenuId" />
+
+                                <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                                    ← Quay lại
+                                </a>
+
+                                <button type="submit" class="btn btn-danger px-4">
+                                    🗑️ Xác nhận xóa
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .card {
+        border-radius: 20px;
+    }
+
+    .form-control {
+        border-radius: 12px;
+    }
+</style>
