@@ -1,0 +1,125 @@
+﻿@model Doanweb.Models.TbAccount
+
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+
+    <!-- Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <h2 class="fw-bold">Chỉnh sửa người dùng</h2>
+            <p class="text-muted">Cập nhật thông tin tài khoản</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+
+                <div class="col-lg-10">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-4">
+
+                            <form asp-action="Edit" method="post">
+                                <input type="hidden" asp-for="AccountId" />
+
+                                <div asp-validation-summary="ModelOnly"
+                                     class="text-danger mb-3"></div>
+
+                                <!-- Username (readonly) -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        Username
+                                    </label>
+                                    <input asp-for="Username"
+                                           class="form-control"
+                                           readonly />
+                                </div>
+
+                                <!-- FullName + Email -->
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="FullName"
+                                               class="form-label fw-semibold">
+                                            Họ tên
+                                        </label>
+                                        <input asp-for="FullName"
+                                               class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Email"
+                                               class="form-label fw-semibold">
+                                            Email
+                                        </label>
+                                        <input asp-for="Email"
+                                               type="email"
+                                               class="form-control" />
+                                    </div>
+                                </div>
+
+                                <!-- Role + Status -->
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">
+                                            Quyền
+                                        </label>
+                                        <select asp-for="RoleId"
+                                                class="form-select">
+                                            @foreach (var r in ViewBag.Roles)
+                                            {
+                                                <option value="@r.RoleId">
+                                                    @r.RoleName
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">
+                                            Trạng thái
+                                        </label>
+                                        <select asp-for="IsActive"
+                                                class="form-select">
+                                            <option value="true">Hoạt động</option>
+                                            <option value="false">Khóa</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a asp-action="Index"
+                                       class="btn btn-outline-secondary px-4">
+                                        ← Quay lại
+                                    </a>
+
+                                    <button type="submit"
+                                            class="btn btn-success px-4">
+                                        💾 Lưu thay đổi
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 12px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+</style>
